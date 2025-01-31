@@ -60,23 +60,22 @@ class Graph:
             if value > 0 and i not in visited_nodes:  # do not want to push neighbers with edge length 0, those are self or not connected
                 heapq.heappush(neighbors, (value, start_node, i))
 
-        # Begin loop, break from the loop once the number of visited nodes is no longer less than the number of nodes
+        #Begin loop, break from the loop once the number of visited nodes is no longer less than the number of nodes
         while len(visited_nodes) < N:
             #Extract edge length from value, index of edge length from i, and index of parent node from parent
             value, parent, i = heapq.heappop(neighbors)
             if i in visited_nodes:
                 continue
             
-            # Add parent to visited nodes, this will prevent loops within the mst
+            #Add parent to visited nodes, this will prevent loops within the mst
             visited_nodes.add(i)
 
             #Add edge length to correct index in mst
             mst[parent,i] = value
             mst[i, parent] = value
 
-            #now iterating over index and value of new node
+            #Now iterating over index and value of new node
             for j, value in enumerate(graph[i]):
-                if value > 0 and j not in visited_nodes: #filters out no connections and self connections
-                    heapq.heappush(neighbors, (value, i, j)) #stores new neighbor edge length, the new parent node, and the index of the edge lengths
+                if value > 0 and j not in visited_nodes: #Filters out no connections and self connections
+                    heapq.heappush(neighbors, (value, i, j)) #Stores new neighbor edge length, the new parent node, and the index of the edge lengths
         self.mst = mst
-
