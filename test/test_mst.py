@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from mst import Graph
+from mst.graph import Graph
 from sklearn.metrics import pairwise_distances
 
 
@@ -64,11 +64,23 @@ def test_mst_single_cell_data():
     g.construct_mst()
     check_mst(g.adj_mat, g.mst, 57.263561605571695)
 
-
 def test_mst_student():
     """
     
     TODO: Write at least one unit test for MST construction.
     
+    Test to ensure MST has N-1 Edges for N nodes 
     """
-    pass
+    #generating same instance of graph from single cell data
+    file_path = './data/slingshot_example.txt'
+    coords = np.loadtxt(file_path) 
+    dist_mat = pairwise_distances(coords) 
+    g = Graph(dist_mat)
+    
+    N = len(g.adj_mat)
+
+    g.construct_mst()
+
+    edges = np.count_nonzero(g.mst) // 2 # dividing by 2 because MST adjacenty matrix is symmetric
+    
+    assert edges == N -1 

@@ -41,4 +41,42 @@ class Graph:
         `heapify`, `heappop`, and `heappush` functions.
 
         """
-        self.mst = None
+
+        graph = self.adj_mat #Easy variable for adjacency matrix
+        N = len(graph)  #Getting N, or number of nodes
+
+        #Initializing mst with zeros, empty set visited nodes, and an empty queue of neighbors
+        mst = np.zeros((N,N))
+        visited_nodes = set()
+        neighbors = []
+        heapq.heapify(neighbors)
+
+        #Picking A random Node 
+        start_node = np.random.randint(0, N)
+        visited_nodes.add(start_node)
+
+
+        for i, value in enumerate(graph[start_node]):
+            if value > 0 and i not in visited_nodes:  # do not want to push neighbers with edge length 0, those are self or not connected
+                heapq.heappush(neighbors, (value, start_node, i))
+
+        # Begin loop, break from the loop once the number of visited nodes is no longer less than the number of nodes
+        while len(visited_nodes) < N:
+            #Extract edge length from value, index of edge length from i, and index of parent node from parent
+            value, parent, i = heapq.heappop(neighbors)
+            if i in visited_nodes:
+                continue
+            
+            # Add parent to visited nodes, this will prevent loops within the mst
+            visited_nodes.add(i)
+
+            #Add edge length to correct index in mst
+            mst[parent,i] = value
+            mst[i, parent] = value
+
+            #now iterating over index and value of new node
+            for j, value in enumerate(graph[i]):
+                if value > 0 and j not in visited_nodes: #filters out no connections and self connections
+                    heapq.heappush(neighbors, (value, i, j)) #stores new neighbor edge length, the new parent node, and the index of the edge lengths
+        self.mst = mst
+
